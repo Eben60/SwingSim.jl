@@ -1,0 +1,7 @@
+name = "SwingSim"
+uuid = "b2fc2125-6bbe-4ac9-9697-36ed769342ca"
+authors = ["Eben60"]
+version = "0.0.1"
+
+[compat]
+julia = "1.10"
