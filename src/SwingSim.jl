@@ -11,5 +11,10 @@ using Plots, OrdinaryDiffEq
 const g = 9.81
 
 include("weightposition.jl")
+export weightspos_testplot
+
+include("Pendulum_ODE.jl")
+export solve_pendulum, solve_testplot
+
 
 end

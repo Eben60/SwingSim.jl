@@ -29,13 +29,16 @@ end
 
 τ_so(l) = 2π * sqrt(l / g)
 
-function weightpos(t, l_max, shift, τ; ϕ₀=0, pulse_dist = π/2, g_no = 2)
-    (; span) = span_no(t, shift, τ; ϕ₀, pulse_dist, g_no)
-    return weightpos(t, l_max, shift, τ, span; ϕ₀, pulse_dist, g_no)
-end
+# function weightpos(t, l_max, shift, τ; ϕ₀=0, pulse_dist = π/2, g_no = 2)
+#     (; span) = span_no(t, shift, τ; ϕ₀, pulse_dist, g_no)
+#     return weightpos(t, l_max, shift, τ, span; ϕ₀, pulse_dist, g_no)
+# end
 
-function weightpos(t, l_max, shift, τ, span; ϕ₀=0, pulse_dist = π/2, g_no = 2)
+function weightpos(t, l_max, shift, τ, span=nothing; ϕ₀=0, pulse_dist = π/2, g_no = 2)
     t_red = t_reduced(t, τ, ϕ₀)
+    if isnothing(span) 
+        (; span) = span_no(t, shift, τ; ϕ₀, pulse_dist, g_no)
+    end
     return _weightpos(t_red, l_max, shift, τ, span; pulse_dist, g_no)
 end
 
@@ -67,13 +70,11 @@ function _weightpos_prim(t, l_max, shift, τ, span; pulse_dist = π/2, g_no)
     return -ddl
 end
 
-function weightpos_prim(t, l_max, shift, τ; ϕ₀=0, pulse_dist = π/2, g_no = 2)
-    (; span) = span_no(t, shift, τ; ϕ₀, pulse_dist, g_no)
-    return weightpos_prim(t, l_max, shift, τ, span; ϕ₀, pulse_dist, g_no)
-end
-
-function weightpos_prim(t, l_max, shift, τ, span; ϕ₀=0, pulse_dist = π/2, g_no = 2)
+function weightpos_prim(t, l_max, shift, τ, span=nothing; ϕ₀=0, pulse_dist = π/2, g_no = 2)
     t_red = t_reduced(t, τ, ϕ₀)
+    if isnothing(span) 
+        (; span) = span_no(t, shift, τ; ϕ₀, pulse_dist, g_no)
+    end
     return _weightpos_prim(t_red, l_max, shift, τ, span; pulse_dist, g_no)
 end
 
@@ -120,9 +121,8 @@ function _span_no(t, shift, τ, tol;  pulse_dist, g_no )
 end
 
 
-function testplot(; l_max=3, τ=3.5, shift=0.2, g_no=1, ϕ₀=0, pulse_dist=π/2)
+function weightspos_testplot(; l_max=3, τ=3.5, shift=0.2, g_no=1, ϕ₀=0, pulse_dist=π/2)
     ts = range(0, 2τ, length=1000)
     ys = Float64[weightpos(t, l_max, shift, τ; ϕ₀, pulse_dist, g_no) for t in ts]
     fig = plot(ts, ys)
 end
-export testplot

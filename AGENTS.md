@@ -2,7 +2,7 @@
 
 ## Agents Behavior
 
-- **Always clarify first** if a user's request is unclear, before starting the actual action.
+- **Always clarify first** if a user's request is unclear, before starting the actual action. Never just assume the user actually meant something else from what was written: Ask them directly!
 - **Do not** interpret a question **or** a review request as an implicit request for code rework. Example of proper dialogue:
     - *Human*: Is XY a good idea?
     - *Agent*: Yes, XY is good because of A, B, and C. Should I implement it for you?
