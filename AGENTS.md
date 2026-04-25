@@ -13,3 +13,4 @@
 
 ## Equations
 - Pendulum equations in [polar coordinates](PendulumEquation.md)
+- Pendulum equations in [Cartesian coordinates](PendulumCartesianModel.md)

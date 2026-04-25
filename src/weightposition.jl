@@ -82,7 +82,7 @@ end
 t_reduced(t, τ, ϕ₀=0) = mod(t + τ*ϕ₀/(2*π), τ)
 
 span_no(t, shift, τ; ϕ₀=0, pulse_dist = π/2, g_no = 2) =
-    _span_no(t_reduced(t, τ, ϕ₀) , shift, τ, 10*eps(t) ;  pulse_dist, g_no )
+    _span_no(t_reduced(t, τ, ϕ₀) , shift, τ, 10*eps(float(t)) ;  pulse_dist, g_no )
 
 
 function _span_no(t, shift, τ, tol;  pulse_dist, g_no )
@@ -124,5 +124,38 @@ end
 function weightspos_testplot(; l_max=3, τ=3.5, shift=0.2, g_no=1, ϕ₀=0, pulse_dist=π/2)
     ts = range(0, 2τ, length=1000)
     ys = Float64[weightpos(t, l_max, shift, τ; ϕ₀, pulse_dist, g_no) for t in ts]
-    fig = plot(ts, ys)
+    return plot(ts, ys)
+end
+
+# ---- Second derivative of length (L̈) ----
+
+function _weightpos_sec(t, l_max, shift, τ, span; pulse_dist = π/2, g_no)
+    a = g_no * g
+
+    ddl = if span == 1
+        a
+    elseif span == 2
+        0.0
+    elseif span == 3
+        -a
+    elseif span == 4
+        0.0
+    elseif span == 5
+        -a
+    elseif span == 6
+        0.0
+    elseif span == 7
+        a
+    else
+        0.0
+    end
+    return -ddl
+end
+
+function weightpos_sec(t, l_max, shift, τ, span=nothing; ϕ₀=0, pulse_dist = π/2, g_no = 2)
+    t_red = t_reduced(t, τ, ϕ₀)
+    if isnothing(span)
+        (; span) = span_no(t, shift, τ; ϕ₀, pulse_dist, g_no)
+    end
+    return _weightpos_sec(t_red, l_max, shift, τ, span; pulse_dist, g_no)
 end

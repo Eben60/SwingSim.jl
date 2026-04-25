@@ -31,7 +31,7 @@ end
 
 Tests solve_pendulum with default parameters and plots both angle θ and length L over time.
 """
-function solve_testplot(; θ₀=-π/4, ω₀=0.0, l_max=3, τ=3.5, shift=0.2, g_no=1, ϕ₀=0, pulse_dist=π/2, Q=10, tplot=(0.0, 3*τ), solver=BS3(), kwargs...)
+function plot_pendulum_polar_ODE(; θ₀=-π/4, ω₀=0.0, l_max=3, τ=3.5, shift=0.2, g_no=1, ϕ₀=0, pulse_dist=π/2, Q=10, tplot=(0.0, 3*τ), solver=BS3(), kwargs...)
 
     p_start, p_end = tplot
     tspan = (0, p_end)
