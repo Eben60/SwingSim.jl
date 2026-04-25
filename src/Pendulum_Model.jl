@@ -30,7 +30,7 @@ The interface mirrors `solve_pendulum`.
 """
 function pendulum_xy_model(θ₀, ω₀, tspan, l_max, shift, τ;
                            ϕ₀=0, pulse_dist=π/2, g_no=2,
-                           Q=Inf, L0=l_max,
+                           Q=50, L0=l_max,
                            span=nothing,
                            solver=BS3(), kwargs...)
 
@@ -59,8 +59,10 @@ function pendulum_xy_model(θ₀, ω₀, tspan, l_max, shift, τ;
     @named sys = ODESystem(eqs, t)
     sys_simp = structural_simplify(sys)
 
+    tspan = Float64.(tspan) # ensure all parameter are Float64
+
     # Initial conditions: polar → Cartesian
-    t0 = float(tspan[1])
+    t0 = tspan[1]
     L_i = weightpos(t0, l_max, shift, τ, span; ϕ₀, pulse_dist, g_no)
     dL_i = weightpos_prim(t0, l_max, shift, τ, span; ϕ₀, pulse_dist, g_no)
 
@@ -70,19 +72,26 @@ function pendulum_xy_model(θ₀, ω₀, tspan, l_max, shift, τ;
     vy0 = -dL_i * cos(θ₀) + L_i * ω₀ * sin(θ₀)
 
     init = Dict(
-        x => x0, y => y0, vx => vx0, vy => vy0,
-        p_l_max => Float64(l_max), p_shift => Float64(shift),
-        p_τ => Float64(τ), p_ϕ₀ => Float64(ϕ₀),
-        p_pulse_dist => Float64(pulse_dist), p_g_no => Float64(g_no),
-        p_Q => Float64(Q), p_L0 => Float64(L0),
+        x => x0, 
+        y => y0, 
+        vx => vx0, 
+        vy => vy0,
+        p_l_max => Float64(l_max), 
+        p_shift => Float64(shift),
+        p_τ => Float64(τ), 
+        p_ϕ₀ => Float64(ϕ₀),
+        p_pulse_dist => Float64(pulse_dist), 
+        p_g_no => Float64(g_no),
+        p_Q => Float64(Q), 
+        p_L0 => Float64(L0),
     )
 
-    prob = ODEProblem(sys_simp, init, float.(tspan))
+    prob = ODEProblem(sys_simp, init, tspan)
     return solve(prob, solver; kwargs...)
 end
 
 function plot_pendulum_xy_model(; θ₀=-π/4, ω₀=0.0, l_max=3, τ=3.5, shift=0.2,
-                                 g_no=1, ϕ₀=0, pulse_dist=π/2, Q=10,
+                                 g_no=1, ϕ₀=0, pulse_dist=π/2, Q=50,
                                  tplot=(0.0, 3*τ), solver=BS3(), kwargs...)
     p_start, p_end = tplot
     tspan = (0.0, Float64(p_end))
@@ -103,11 +112,11 @@ function plot_pendulum_xy_model(; θ₀=-π/4, ω₀=0.0, l_max=3, τ=3.5, shift
 
     p1 = plot(ts, θs, label="θ (angle)", xlabel="t", ylabel="θ (rad)", lw=2)
     annotate!(p1, (ts[1]+ts[end])/2, maximum(θs),
-              text("θ₀ = $(theta0_deg)°", :center, :top, 10))
+              text("θ₀ = $(theta0_deg)°", 10))
 
     p2 = plot(ts, ls, label="L (length)", xlabel="t", ylabel="L (m)", color=:red, lw=2)
     annotate!(p2, (ts[1]+ts[end])/2, (maximum(ls)+minimum(ls))/2,
-              text("ϕ₀ = $(phi0_deg)°", :center, :center, 10))
+              text("ϕ₀ = $(phi0_deg)°", 10))
 
     return plot(p1, p2, layout=(2,1))
 end
