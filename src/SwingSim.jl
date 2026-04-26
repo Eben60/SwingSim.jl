@@ -9,6 +9,7 @@ module SwingSim
 
 using OrdinaryDiffEq
 using ModelingToolkit
+using Symbolics
 using Plots
 
 const g = 9.81
@@ -21,5 +22,12 @@ export solve_pendulum, plot_pendulum_polar_ODE
 
 include("Pendulum_Model.jl")
 export pendulum_xy_model, plot_pendulum_xy_model
+
+include("Pendulum_Foldable.jl")
+export solve_pendulum_gymnast, plot_pendulum_gymnast
+
+function __init__()
+    __init_gymnast__()
+end
 
 end
