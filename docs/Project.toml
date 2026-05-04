@@ -1,3 +1,6 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 SwingSim = "b2fc2125-6bbe-4ac9-9697-36ed769342ca"
+
+[compat]
+Documenter = "1.17.0"
